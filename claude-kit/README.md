@@ -22,15 +22,27 @@ claude-kit/
 
 ## 導入方法
 
+### おすすめ：環境のセットアップスクリプトに入れる（Web 版・自動）
+
+[claude.ai/code](https://claude.ai/code) の **環境（Environment）設定 → セットアップスクリプト** に、次の1行を追加するだけ：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nokokoyk-hub/-/main/claude-kit/setup.sh | bash
+```
+
+これで、その環境のセッションが始まるたびに最新のキットが `~/.claude/` に自動で入る。
+リポジトリ（このリポの main）を直せば、次のセッションから全部に反映される。
+
+- ⚠️ このリポは公開リポなので認証不要。ただし main ブランチから取得するため、**キットの変更は main にマージされてから有効になる**
+- ネットワーク制限などで取得に失敗した場合は静かにスキップし、セッション起動は止めない
+
 ### パソコンの Claude Code に入れる場合
 
-ターミナルは触らなくてええよ。Claude Code のセッションでちゃぴにこう頼むだけ：
+ターミナルでこの1行（上と同じもの）を実行するか、Claude Code のセッションでちゃぴにこう頼む：
 
-> このリポジトリの claude-kit/global の中身を ~/.claude/ に反映して
+> https://raw.githubusercontent.com/nokokoyk-hub/-/main/claude-kit/setup.sh を実行してキットを入れて
 
-（`CLAUDE.md` → `~/.claude/CLAUDE.md`、`agents/` → `~/.claude/agents/`、`skills/` → `~/.claude/skills/` にコピーされれば完了）
-
-### 特定のリポジトリだけに入れる場合（Web 版でも効く）
+### 特定のリポジトリだけに入れる場合
 
 対象リポジトリのセッションでちゃぴにこう頼む：
 
