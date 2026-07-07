@@ -17,6 +17,8 @@ claude-kit/
 │       ├── kickoff/SKILL.md   ← /kickoff  作業開始の儀式
 │       ├── wrapup/SKILL.md    ← /wrapup   作業終了の儀式（北極星更新など）
 │       └── implement/SKILL.md ← /implement 実装パイプライン
+├── web-chat/
+│   └── PROJECT_INSTRUCTIONS.md ← Web版チャット（claude.ai）のプロジェクト指示に貼る用
 └── README.md                  ← これ
 ```
 
