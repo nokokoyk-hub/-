@@ -93,26 +93,53 @@ Git は `.git` という管理フォルダに、細かいファイルを高速�
 2. 「Choose...」で `C:\Users\nokok\Obsidian Vault` を選ぶ
 3. **「This directory does not appear to be a Git repository」** と赤字で出る（正常）
    → その下の **「create a repository」** のリンクをクリック
-4. 「Create a New Repository」画面が出る。以下を確認して **Create repository** を押す
+> 💡 **「Add repository」ボタンは押せない（グレーのまま）が正常。**
+> あれは「すでに Git 化済みのフォルダ」を追加するボタン。まだ Git 化していないので押せない。
+> 押すのは赤字の中の **「create a repository」リンク**。
 
-   | 項目 | 設定 |
-   |---|---|
-   | Name | `Obsidian-Vault`（自動で入る。変えなくてよい） |
-   | Local path | `C:\Users\nokok`（自動で入る） |
-   | Initialize with README | チェック**なし**でよい |
-   | Git ignore | `None` のまま |
-   | License | `None` のまま |
+4. 「Create a New Repository」画面が出る。**ここが最大の事故ポイント。**
 
-5. 画面上部の **「Publish repository」** ボタンを押す
-6. ⭐**ここが最重要**⭐ ポップアップの
+   > 🚨 **Local path ＋ Name ＝ 実際に作られるフォルダ**になる。
+   > `Local path` に `C:\Users\nokok\Obsidian Vault` が入ったまま進めると、
+   > **`Obsidian Vault\Obsidian Vault` という入れ子の空リポジトリ**ができる
+   > （2026-08-15 に実際に踏んだ）。
+
+   | 項目 | 設定 | 注意 |
+   |---|---|---|
+   | Name | `Obsidian Vault` | **フォルダ名と完全一致**させる。ここでハイフンに直さない |
+   | Local path | `C:\Users\nokok` | ⚠️ **親フォルダだけ**。`\Obsidian Vault` を含めない |
+   | Initialize with README | チェック**なし** | |
+   | Git ignore | `None` | |
+   | License | `None` | |
+
+   検算：`C:\Users\nokok` ＋ `Obsidian Vault` ＝ `C:\Users\nokok\Obsidian Vault` ✅
+
+   確認できたら **Create repository** を押す。
+
+5. 🎯 **Changes にノートが大量に並ぶことを確認する。**
+   `1 changed file`（`.gitattributes` だけ）で止まっていたら、**フォルダを間違えている**。
+   → **Repository → Show in Explorer** で Git が見ているフォルダを直接確認し、
+     入れ子になっていたら STEP 4 に進む前に片付ける
+
+6. コミットメッセージ `Initial commit` のまま **Commit to main** を押す
+
+   > コミットするとファイルは Changes から History へ移る。
+   > **Changes が空になるのは成功の証**で、消えたわけではない。
+
+7. 画面上部の **「Publish repository」** ボタンを押す
+8. ⭐**ここが最重要**⭐ ポップアップの
    **「Keep this code private」に必ずチェックが入っていること**を確認
    （初期状態でチェック済み。**絶対に外さない**）
-7. **Publish repository** を押す
+
+   > 💡 ここの `Name` は **GitHub 上のリポジトリ名**で、PCのフォルダ名とは別物。
+   > GitHub はスペースを使えないのでハイフンに直す。ローカルのフォルダ名は変わらない。
+
+9. **Publish repository** を押す
 
 > アップロードに数分かかる場合がある。完了したら GitHub 上にリポジトリができている。
 
-8. ブラウザで https://github.com/nokokoyk-hub?tab=repositories を開き、
-   `Obsidian-Vault` の横に **Private** のバッジが付いていることを確認
+10. ブラウザで https://github.com/nokokoyk-hub?tab=repositories を開き、
+    **Private** のバッジが付いていることを確認
 
 ---
 
@@ -125,19 +152,77 @@ Git は `.git` という管理フォルダに、細かいファイルを高速�
 ちゃぴ側でセッションにリポを追加し、`AI開発脳` の中身を読めるようにする。
 以降は、ちゃぴが直接ノートを読んだり追記したりできる。
 
+> 📌 **2026-08-15 実施済み。** 実際のリポジトリ名は **`nokokoyk-hub/Obsidian-Vault-`**
+> （末尾にハイフン）。ちゃぴが繋ぐときは正確な名前が要るので、
+> 見つからないと言われたら GitHub の一覧で実名を確認する。
+
 ---
 
-## STEP 4（任意）：自動同期にする
+## STEP 4：自動同期にする（実質必須）
 
-毎回 GitHub Desktop を開くのが面倒な場合、Obsidian のプラグインで自動化できる。
+毎回 GitHub Desktop を開くのは続かないので、Obsidian のプラグインで自動化する。
+
+### 4-1. Git 本体を入れる（先にこれ）
+
+Obsidian のプラグインは **`git` コマンド本体を借りて動く**。
+GitHub Desktop は自前の Git を内蔵しているが、**他アプリからは見えない場所にある**ため、
+これだけでは足りない。入っていないとプラグインが起動できず、
+コマンドパレットに `Git:` のコマンドが **1つも出てこない**。
+
+1. https://git-scm.com/download/win から「64-bit Git for Windows Setup」を入れる
+2. インストーラの画面は基本すべて **Next** でよい
+3. ⚠️ **「Adjusting your PATH environment」の画面だけ確認**
+   → **「Git from the command line and also from 3rd-party software」**（真ん中・推奨）を選ぶ
+   → 一番上の「Git Bash only」を選ぶと Obsidian から見えないままになる
+4. インストール後、**Obsidian を完全に再起動**（✕で閉じるだけでは不十分）
+
+### 4-2. プラグインを入れる
 
 1. Obsidian の **設定 → コミュニティプラグイン → 制限モードを無効にする**
-2. **閲覧 → 「Obsidian Git」** を検索してインストール → 有効化
-3. プラグイン設定で以下を指定
-   - `Vault backup interval (minutes)`：`10`
-   - `Auto pull on startup`：オン
+2. **閲覧（Browse）** で **`Git`** を検索
 
-これで Obsidian を開くたびに最新を取得し、10分ごとに自動保存される。
+   > 🔎 **2025〜2026 の間に名前が変わっている。**
+   > 旧：プラグイン名「Obsidian Git」／作者「Vinzent03」
+   > 新：**プラグイン名「Git」／作者「Vinzent」**
+   > 「Obsidian Git」で検索しても**出てこない**。
+   > Git 系プラグインは多いので、**ダウンロード数（約300万）が最大のもの**を選ぶのが確実
+   > （2026-08-15 時点、[community.obsidian.md/plugins/obsidian-git](https://community.obsidian.md/plugins/obsidian-git) で確認）
+
+3. **インストール → 有効化**（この2つは別操作。入れただけではコマンドが出ない）
+
+### 4-3. 設定する
+
+| 設定項目 | 値 |
+|---|---|
+| Auto commit-and-sync interval（旧：Vault backup interval）（分） | `10` |
+| Auto pull on startup / Pull on startup | オン |
+
+### 4-4. 動作確認
+
+自動を待たず、手動で1回走らせる。
+
+1. ノートを1行編集して `Ctrl + S`
+2. `Ctrl + P` → **`Git`** → **「Git: Commit-and-sync」** を実行
+3. GitHub 上のリポジトリで、その変更が反映されていることを確認
+
+### 4-5. `.gitignore` を置く
+
+`.obsidian/workspace.json` は Obsidian でタブを動かすたびに書き換わるため、
+自動同期にすると**中身のないコミットが10分ごとに量産される**。以下を Vault 直下の
+`.gitignore` に置く（2026-08-15 に設置済み）。
+
+```
+.obsidian/workspace.json
+.obsidian/workspace-mobile.json
+.DS_Store
+Thumbs.db
+desktop.ini
+```
+
+> 🚨 **`.obsidian/plugins/` は無視リストに入れない。**
+> すでに追跡済みのファイルを untrack すると、他のPCが pull したときに
+> **working tree から削除され、プラグイン本体が消える**。
+> プラグイン本体は更新時しか変わらないので、追跡したままでよい。
 
 ---
 
@@ -215,7 +300,12 @@ Obsidian で新パス側のノートに何か1行書き足してから、Codex �
 | GitHub Desktop で赤いエラー | 「GitHub Desktop でこう出た（画面の文言をそのまま）」 |
 | Private かどうか不安 | 「Private になってるか確認して」 |
 | Codex とノートの中身が食い違う | 「Codex と見えてるノートが違う」（旧パスを見ている疑い） |
+| `Ctrl+P` で Git のコマンドが出ない | 「Gitのコマンドが出てこん」（Git本体が未導入 or 有効化してない） |
+| 同期時に `does not have a commit checked out` | 「入れ子のフォルダが残ってるかも」（Vault内の空リポジトリが原因） |
 | 全部やり直したい | 「一回リセットしたい」 |
+
+> `warning: ... LF will be replaced by CRLF ...` は改行コードの自動変換のお知らせで、
+> **害はない**。毎回大量に出るが無視してよい。止めるべきは `error:` と `fatal:` の行。
 
 **元の Vault は OneDrive に残してある。** 最悪そこに戻れるので、失敗しても大丈夫。
 
