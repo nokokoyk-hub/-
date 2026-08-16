@@ -49,14 +49,14 @@ docs/
 - `codex-kit/setup.sh` を追加し、Codex home の `AGENTS.md` へ安全に導入
 - ルート `AGENTS.md` から共通設定を最初に読むよう変更
 - Codexクラウド環境の Setup script と Maintenance script に登録する1行を `codex-kit/README.md` へ記載
+- Codexクラウドの「設定 → 一般 → カスタム指示」へ、全タスク共通の短いちゃぴ人格を保存。ページ再読み込み後も保持を確認
 
 ### 反映状況
 
 1. 完了：PR #10をmainへSquash merge（commit `59491f8c`）
-2. 完了：設定リポ `nokokoyk-hub/-` 用のCodexクラウド環境を作成し、Setup / Maintenance scriptの両方へ導入コマンドを登録・表示確認
-3. 完了：実測対象だった `nokokoyk-hub/ojuken-manager` 用環境を作成。Setupは `npm ci` 後にちゃぴ設定を導入し、Maintenanceはちゃぴ設定だけを更新する構成
-4. 未完了：`ojuken-manager` 環境から新しいクラウドタスクを開始し、グローバルとプロジェクトの `AGENTS.md` 読み込み・関西弁の応対を実測
-5. 必要時：他の開発リポ環境へ同じ導入コマンドを横展開
+2. 完了：Codexクラウドのアカウント共通「カスタム指示」へ短いちゃぴ人格を保存し、再読み込み後も保持を確認
+3. 補助対応：設定リポ `nokokoyk-hub/-` と `nokokoyk-hub/ojuken-manager` の環境にもSetup / Maintenance経由の配布を登録
+4. 未完了：カスタム指示保存後の新しいクラウドタスクで、関西弁とリポ固有 `AGENTS.md` の両立を実測
 
 既存チャットは開始時の指示を保持している可能性があるため、新しいチャットで確認する。
 
@@ -85,12 +85,12 @@ docs/
 2. Claude Codeの開始・終了・実装skills：稼働中
 3. Web版Claude用プロジェクト指示：貼り付け結果の確認待ち
 4. AI開発脳（Obsidian）とGitHubの双方向同期：稼働中
-5. Codex共通ちゃぴ設定：main反映・設定リポと `ojuken-manager` 環境への登録済み。`ojuken-manager` の新しいクラウドタスクでの実測待ち
+5. Codex共通ちゃぴ設定：アカウント共通カスタム指示へ保存済み。設定リポと `ojuken-manager` の環境配布も補助的に登録済み。保存後の新しいクラウドタスクで実測待ち
 
 ## 残タスク
 
-1. `ojuken-manager` 環境から新しいCodexクラウドタスクを開始し、口調と指示元を実測確認
-2. その他の開発リポでも共通ちゃぴ設定を使う場合、各リポ環境の Setup / Maintenance script へ同じ導入コマンドを登録
+1. カスタム指示保存後の新しいCodexクラウドタスクを開始し、口調とリポ固有指示の両立を実測確認
+2. 環境Setup経由の配布は人格の本命にせず、依存関係・ツール設定が必要なリポだけ補助利用
 3. Web版Claudeのプロジェクト指示を貼った後の挙動確認
 4. 旧Vaultの削除判断（凍結期間後。削除前に全参照先を再確認）
 5. デスクトップへ退避した入れ子フォルダの削除判断
@@ -99,6 +99,6 @@ docs/
 
 - 必ずこのリポを先に直す
 - mainへ直接書かず、ブランチ → PR → のん確認 → mainマージ
-- Codex固有設定は `codex-kit/`、Claude固有設定は `claude-kit/`、共通方針は `shared/` に置く
+- Codexの全タスク共通人格はアカウントの「カスタム指示」、リポ固有ルールは各 `AGENTS.md`、配布用バックアップは `codex-kit/` に置く。Claude固有設定は `claude-kit/`、共通方針は `shared/` に置く
 - 保存場所や参照先を変えるときは、そこを読み書きする人・ツール・クラウド環境を先に全部洗い出す
 - 設定ファイルを置いただけで配布済みと判断せず、新しいセッションで実測確認する
