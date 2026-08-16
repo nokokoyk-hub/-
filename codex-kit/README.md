@@ -1,0 +1,55 @@
+# Codex用ちゃぴ設定キット
+
+CodexクラウドやCodex CLIで、どのリポジトリでも共通の「ちゃぴ」設定を読み込むためのキットです。
+
+## 構成
+
+- `global/AGENTS.md`：全リポジトリ共通の人格・応対・安全・作業ルール
+- `setup.sh`：上記ファイルを Codex home の `AGENTS.md` へ安全に導入するスクリプト
+
+プロジェクト固有のルールは、各リポジトリ直下の `AGENTS.md` に置きます。Codexはグローバル設定を先に、プロジェクト設定を後に読み込みます。
+
+## Codexクラウドへの導入
+
+この変更が `main` にマージされたあと、Codexの対象環境で次の設定を行います。
+
+### Setup script
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nokokoyk-hub/-/main/codex-kit/setup.sh | bash
+```
+
+### Maintenance script
+
+キャッシュ済み環境でも最新版を取り込めるよう、Maintenance script にも同じ1行を設定します。
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/nokokoyk-hub/-/main/codex-kit/setup.sh | bash
+```
+
+セットアップスクリプトは、取得失敗・空ファイル・想定外の内容を検知した場合にエラーで停止します。既存のグローバル `AGENTS.md` がある場合は、変更前の内容を `AGENTS.md.backup-before-chapi-kit` へ退避します。
+
+## 確認方法
+
+新しいCodexクラウドチャットで、次のように聞きます。
+
+> 今読み込んでいる指示元を教えて。自己紹介もして。
+
+次を確認します。
+
+- グローバルの `~/.codex/AGENTS.md` と対象リポの `AGENTS.md` が認識される
+- 「ちゃぴ」と名乗り、自然な関西弁で返す
+- 堅すぎる敬語へ戻っていない
+
+設定ファイルはCodexの新しい実行開始時に読み込まれます。古いチャットではなく、新しいチャットで確認してください。
+
+## 注意
+
+- この公開リポジトリへ秘密情報を書かない
+- `claude-kit/` はClaude Code用。Codexへそのままコピーしない
+- プロジェクト側の `AGENTS.override.md` や、より深い階層の指示が後から優先される場合がある
+- 全環境へ自動で一括配布されるわけではない。利用するCodexクラウド環境ごとに Setup / Maintenance script の登録が必要
+
+---
+
+のん × ちゃぴ ☕🔥
