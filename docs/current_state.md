@@ -1,90 +1,103 @@
 # current_state.md — 北極星ファイル（設定キットリポ）
 
-最終更新：2026-08-15（JST）
+最終更新：2026-08-16（JST）
 
 ## このリポジトリは何か
 
-のん × ちゃぴ ☕🔥 チームの Claude Code 設定一式（ちゃぴ設定キット）の**正本（マスター兼バックアップ）**。
-プロダクト開発はここでは行わない。プロダクトは各専用リポジトリ（ojuken-manager など）で開発する。
+のん × ちゃぴ ☕🔥 チームの Claude Code・Codex 設定一式と、AI共通の記憶基盤（Notion / GitHub / Obsidian）をどう繋ぐかを管理する**正本（マスター兼バックアップ）**。
 
-加えて、**AI共通の記憶基盤（Notion / GitHub / Obsidian）をどう繋ぐか**の手順書もここに置く。
+プロダクト開発はここでは行わない。プロダクトは各専用リポジトリで開発する。
 
 ## 現在の構成
 
 ```
+codex-kit/
+├── global/
+│   └── AGENTS.md               ← Codex全リポ共通のちゃぴ人格・作業ルール
+├── setup.sh                    ← Codex homeへ安全に導入
+└── README.md                   ← Codexクラウドへの導入・確認手順
 claude-kit/
 ├── global/
-│   ├── CLAUDE.md               ← 共通ちゃぴ設定 v2（lessons.md 対応済み）
+│   ├── CLAUDE.md               ← Claude Code共通ちゃぴ設定 v2
 │   ├── agents/                 ← reviewer / zundamon / lamchan
-│   └── skills/                 ← /kickoff /wrapup /implement（学びの記録システム組み込み済み）
+│   └── skills/                 ← /kickoff /wrapup /implement
 ├── web-chat/
-│   └── PROJECT_INSTRUCTIONS.md ← Web版チャット（claude.ai）のプロジェクト指示に貼る用
-├── setup.sh                    ← インストーラ（環境のセットアップスクリプトから curl 実行）
+│   └── PROJECT_INSTRUCTIONS.md ← Web版チャットのプロジェクト指示に貼る用
+├── setup.sh
 └── README.md
 shared/
-└── AI_WORKFLOW.md              ← Notion・GitHub・Obsidian・各種チャットの正本分担（共通方針の正本）
-AGENTS.md                       ← Codex 用のリポジトリ指示
-docs/                           ← このリポ自身の記録
+└── AI_WORKFLOW.md              ← Notion・GitHub・Obsidian・各種チャットの正本分担
+AGENTS.md                       ← このリポ固有のCodex指示
+docs/
 ├── current_state.md            ← これ（北極星）
 ├── lessons.md                  ← ちゃぴの経験メモ
-├── setup-obsidian-github.md    ← Obsidian Vault を GitHub に繋ぐ手順（のん専用・実施済み）
+├── setup-obsidian-github.md    ← Obsidian VaultとGitHubの接続手順
 ├── digests/                    ← 日次ダイジェスト
 └── handoff/                    ← 次回引き継ぎメモ
 ```
 
-## 配布の仕組み（2026-07-09 に修理・実証済み）
+## Codexクラウドの設定（2026-08-16 追加）
 
-- **リポジトリは公開（public）**。これが配布の前提条件（非公開だと raw URL が404になり配布が静かに失敗する）
-- claude.ai の環境「デフォルト」のセットアップスクリプトに以下の1行が入っており、**どのリポのセッションでも起動時に最新キットが自動で入る**：
-  `curl -fsSL https://raw.githubusercontent.com/nokokoyk-hub/-/main/claude-kit/setup.sh | bash`
-- キットの変更は **main にマージされてから有効**になる
-- 動作確認方法：新セッションで「キット入ってる？」→ 関西弁のちゃぴが返ってくればOK
+### 原因
+
+ルート `AGENTS.md` には作業ルールだけがあり、関西弁のちゃぴ人格が定義されていなかった。
+さらに、リポジトリ直下の `AGENTS.md` はそのリポ内のプロジェクト指示であり、設定リポが存在するだけでは他リポへ自動配布されない。
+
+### 対応
+
+- `codex-kit/global/AGENTS.md` を、Codex全リポ共通設定の正本として追加
+- `codex-kit/setup.sh` を追加し、Codex home の `AGENTS.md` へ安全に導入
+- ルート `AGENTS.md` から共通設定を最初に読むよう変更
+- Codexクラウド環境の Setup script と Maintenance script に登録する1行を `codex-kit/README.md` へ記載
+
+### 反映条件
+
+1. 変更PRをmainへマージする
+2. 利用するCodexクラウド環境ごとに Setup / Maintenance script を登録する
+3. 新しいクラウドチャットで、グローバルとプロジェクトの `AGENTS.md` 読み込み・関西弁の応対を確認する
+
+既存チャットは開始時の指示を保持している可能性があるため、新しいチャットで確認する。
+
+## Claude Codeの配布（2026-07-09 修理・実証済み）
+
+- リポジトリは公開。raw URLからの配布が前提
+- claude.ai の環境「デフォルト」のセットアップスクリプトから `claude-kit/setup.sh` を実行
+- キットの変更はmainへマージされてから有効
+- 新セッションで関西弁のちゃぴが返ることを生存確認に使う
 
 ## AI記憶基盤の接続状況（2026-08-15 完成）
 
-3つの正本すべてが、ちゃぴ（クラウド）から到達可能になった。
-
-| 正本 | 実体 | ちゃぴから | 備考 |
+| 正本 | 実体 | クラウドのちゃぴから | 備考 |
 |---|---|---|---|
-| **Notion**（全体司令塔） | Notion ワークスペース | ✅ | MCP 接続 |
-| **GitHub**（現場正本） | 各プロジェクトリポジトリ | ✅ | |
-| **Obsidian**（AI共通の外部脳） | `nokokoyk-hub/Obsidian-Vault-` | ✅ | **2026-08-15 接続** |
+| Notion（全体司令塔） | Notionワークスペース | 接続済み | MCP接続 |
+| GitHub（現場正本） | 各プロジェクトリポジトリ | 接続済み | |
+| Obsidian（AI共通の外部脳） | `nokokoyk-hub/Obsidian-Vault-` | 接続済み | Private、末尾ハイフン注意 |
 
-### Obsidian（AI開発脳）の構成
+- ローカルVaultの正本はOneDriveの外
+- OneDrive配下の旧Vaultは安全網として凍結。読み取り・書き込み・検索をしない
+- CodexクラウドはローカルPCのパスを直接参照せず、接続済みGitHubリポジトリからAI開発脳を読む
 
-```
-のん（Obsidian）
-   ↕ Obsidian Git プラグイン（10分ごとに自動 commit-and-sync / 起動時 auto pull）
-GitHub: nokokoyk-hub/Obsidian-Vault-（Private）
-   ↕ add_repo
-ちゃぴ（クラウドセッション）
+## 稼働中・導入待ちのシステム
 
-Codex（のんのPC）→ ローカル Vault を MCP 経由で直接読み書き
-```
-
-- **Vault の実体**：`C:\Users\nokok\Obsidian Vault`（OneDrive の**外**）
-- **AI開発脳の正本パス**：`C:\Users\nokok\Obsidian Vault\AI開発脳\`
-- **リポジトリ名は `Obsidian-Vault-`（末尾ハイフン）**。ちゃぴが繋ぐときは正確な名前が要る
-- **旧 Vault**（`OneDrive\ドキュメント\Obsidian Vault`）は安全網として**凍結**。読み書き・検索いずれもしない
-- 手順の詳細と事故例は `docs/setup-obsidian-github.md` に集約
-
-## 稼働中のシステム
-
-1. **ちゃぴ人格＋開発ルール**（共通 CLAUDE.md v2）
-2. **儀式**：開始 `/kickoff`・終了 `/wrapup`・実装 `/implement`
-3. **学びの記録システム**：各プロダクトリポの `docs/lessons.md` に経験を書き溜め、`/kickoff` で読み `/wrapup` で追記・棚卸し。整合性チェック＋化石化防止ルールつき
-4. **Web版チャット用指示文**：`claude-kit/web-chat/PROJECT_INSTRUCTIONS.md`（のんがチャット側に貼って使う）
-5. **AI開発脳（Obsidian）**：ちゃぴ・Codex 共通の外部脳。自動同期で常時つながっている
+1. Claude Code共通ちゃぴ設定：稼働中
+2. Claude Codeの開始・終了・実装skills：稼働中
+3. Web版Claude用プロジェクト指示：貼り付け結果の確認待ち
+4. AI開発脳（Obsidian）とGitHubの双方向同期：稼働中
+5. Codex共通ちゃぴ設定：リポ内実装済み。mainマージとクラウド環境への登録待ち
 
 ## 残タスク
 
-- のん：Web版チャットのプロジェクト指示欄に PROJECT_INSTRUCTIONS.md を貼る（→ 貼ったら Sonnet 5 の挙動が改善するか検証）※2026-07-09 からの持ち越し
-- 旧 Vault（OneDrive 配下）の削除判断。1〜2週間の様子見後（目安：2026-08 下旬）
-- デスクトップへ退避した入れ子フォルダ（`.git` と `.gitattributes` のみ）の削除
+1. Codex共通ちゃぴ設定のPRを確認し、mainへマージ
+2. Codexクラウド環境の Setup / Maintenance script に導入コマンドを登録
+3. 必要なら環境キャッシュをリセットし、新しいチャットで口調と指示元を実測確認
+4. Web版Claudeのプロジェクト指示を貼った後の挙動確認
+5. 旧Vaultの削除判断（凍結期間後。削除前に全参照先を再確認）
+6. デスクトップへ退避した入れ子フォルダの削除判断
 
 ## 変更するときの鉄則
 
-- **必ずこのリポを先に直す**（使ってる環境だけ直すのが一番の事故のもと）
-- 反映は main マージ後。作業はブランチ→PR→のん承認の流れ
-- 保存場所や参照先を変えるときは、**そこを読み書きしている人・ツールを先に全部洗い出す**
-  （2026-08-15 の教訓。詳細は `docs/lessons.md`）
+- 必ずこのリポを先に直す
+- mainへ直接書かず、ブランチ → PR → のん確認 → mainマージ
+- Codex固有設定は `codex-kit/`、Claude固有設定は `claude-kit/`、共通方針は `shared/` に置く
+- 保存場所や参照先を変えるときは、そこを読み書きする人・ツール・クラウド環境を先に全部洗い出す
+- 設定ファイルを置いただけで配布済みと判断せず、新しいセッションで実測確認する
