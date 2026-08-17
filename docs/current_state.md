@@ -13,7 +13,9 @@
 ```
 codex-kit/
 ├── global/
-│   └── AGENTS.md               ← Codex全リポ共通のちゃぴ人格・作業ルール
+│   └── AGENTS.md               ← Codex全リポ共通のちゃぴ人格・作業ルール・暴走ガード
+├── environments/
+│   └── ojuken-manager.md       ← Codexクラウド環境設定の正本（リポごと）
 ├── setup.sh                    ← Codex homeへ安全に導入
 └── README.md                   ← Codexクラウドへの導入・確認手順
 claude-kit/
@@ -111,9 +113,17 @@ Codexが頼んでいない作業を何時間も続け、使用量を使い切っ
 4. AI開発脳（Obsidian）とGitHubの双方向同期：稼働中
 5. Codex共通ちゃぴ設定：リポ内実装済み。mainマージとクラウド環境への登録待ち
 
+## Codexクラウド環境設定の正本化（2026-08-17 追加）
+
+- ojuken-manager はクラウドコンテナで `npm ci` → テスト8件 → 本番ビルドまで実測成功（必須の環境変数なし）
+- クラウド苦戦の正体は、Setup script に `npm ci` が無く、ネット遮断のエージェント作業中にインストールへ行って失敗する仕込み不足と判断
+- 環境設定の正本：`codex-kit/environments/ojuken-manager.md`（Setup / Maintenance script・環境変数・確認手順・トラブル対応表）
+- 画面へ貼ったあと、キャッシュリセット → 新タスクで実測確認するまで完了扱いにしない
+
 ## 残タスク
 
-0. Codex暴走ガードのPRを確認し、mainへマージ → 新チャットで「依頼外へ広がらない」ことを実測確認
+0. Codexクラウド環境設定（`codex-kit/environments/ojuken-manager.md`）をのんがCodex画面へ反映 → キャッシュリセット → 新タスクで実測確認
+0-2. Codex暴走ガード（マージ済み）を新チャットで「依頼外へ広がらない」ことを実測確認
 1. Codex共通ちゃぴ設定のPRを確認し、mainへマージ
 2. Codexクラウド環境の Setup / Maintenance script に導入コマンドを登録
 3. 必要なら環境キャッシュをリセットし、新しいチャットで口調と指示元を実測確認
