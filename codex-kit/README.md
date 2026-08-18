@@ -6,6 +6,7 @@ CodexクラウドやCodex CLIで、どのリポジトリでも共通の「ちゃ
 
 - `global/AGENTS.md`：全リポジトリ共通の人格・応対・安全・作業ルール
 - `setup.sh`：上記ファイルを Codex home の `AGENTS.md` へ安全に導入するスクリプト
+- `environments/`：Codexクラウドの環境設定（リポごとの Setup / Maintenance script・環境変数・確認手順）の正本。現在は `ojuken-manager.md`
 
 プロジェクト固有のルールは、各リポジトリ直下の `AGENTS.md` に置きます。Codexはグローバル設定を先に、プロジェクト設定を後に読み込みます。
 
